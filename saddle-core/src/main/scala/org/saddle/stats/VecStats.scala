@@ -528,4 +528,3 @@ class LongStats(r: Vec[Long]) extends VecStats[Long] {
   def argmin: Int = array.argmin(r.toArray)
   def argmax: Int = array.argmax(r.toArray)
 }
-

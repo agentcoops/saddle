@@ -41,6 +41,7 @@ object SaddleBuild extends sbt.Build {
                 "org.joda" % "joda-convert" % "1.2",
                 "com.googlecode.efficient-java-matrix-library" % "ejml" % "0.19",
                 "org.apache.commons" % "commons-math" % "2.2",
+                "org.spire-math" %% "spire" % "0.4.0",
                 "it.unimi.dsi" % "fastutil" % "6.5.4",
                 "it.unimi.dsi" % "dsiutils" % "2.0.15"
               ) ++ Shared.testDeps(v)),
@@ -119,7 +120,7 @@ object Shared {
       </developers>
     ),
     version := "1.2.0-SNAPSHOT",
-    scalaVersion := "2.9.2",
+    scalaVersion := "2.10.0",
     crossScalaVersions := Seq("2.9.2", "2.9.3", "2.10.0"),
     scalacOptions := Seq("-deprecation", "-unchecked"), // , "-Xexperimental"),
     shellPrompt := { (state: State) => "[%s]$ " format(Project.extract(state).currentProject.id) },
