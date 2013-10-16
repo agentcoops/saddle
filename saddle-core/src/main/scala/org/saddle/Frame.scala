@@ -26,6 +26,8 @@ import scalar.Scalar
 import java.io.OutputStream
 import org.saddle.mat.MatCols
 
+import breeze.linalg.{DenseMatrix, DenseVector}
+
 /**
  * `Frame` is an immutable container for 2D data which is indexed along both axes
  * (rows, columns) by associated keys (i.e., indexes).
@@ -129,7 +131,7 @@ class Frame[RX: ST: ORD, CX: ST: ORD, T: ST](
   require(values.numRows == rowIx.length, "Row index length is incorrect")
   require(values.numCols == colIx.length, "Col index length is incorrect")
 
-  private var cachedMat: Option[Mat[T]] = None
+  private var cachedMat: Option[DenseMatrix[T]] = None
 
   /**
    * Number of rows in the Frame
@@ -1270,11 +1272,11 @@ class Frame[RX: ST: ORD, CX: ST: ORD, T: ST](
    * Extract the Mat embodied in the values of the Frame (dropping any indexing
    * information)
    */
-  def toMat: Mat[T] = {
+  def toMat: DenseMatrix[T] = {
     val st = implicitly[ST[T]]
     synchronized {
       if (cachedMat.isEmpty) {
-        val m = Mat(values.numCols, values.numRows, st.concat(values)).T
+        val m = DenseMatrix(values.numCols, values.numRows, st.concat(values)).T
         withMat(Some(m))
       }
       cachedMat.get
@@ -1426,12 +1428,12 @@ class Frame[RX: ST: ORD, CX: ST: ORD, T: ST](
   // ------------------------------------------------------
   // internal contiguous caching of row data for efficiency
 
-  private def withMat(m: Option[Mat[T]]): Frame[RX, CX, T] = {
+  private def withMat(m: Option[DenseMatrix[T]]): Frame[RX, CX, T] = {
     cachedMat = m
     this
   }
 
-  private def rows(): MatCols[T] = MatCols(toMat.T.cols() : _*)
+  private def rows(): MatCols[T] = MatCols(toMat.t : _*)
 
   // --------------------------------------
   // pretty-printing

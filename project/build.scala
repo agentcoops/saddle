@@ -54,7 +54,8 @@ object SaddleBuild extends sbt.Build {
                 "com.googlecode.efficient-java-matrix-library" % "ejml" % "0.19",
                 "org.apache.commons" % "commons-math" % "2.2",
                 "it.unimi.dsi" % "fastutil" % "6.5.4",
-                "it.unimi.dsi" % "dsiutils" % "2.0.15"
+                "it.unimi.dsi" % "dsiutils" % "2.0.15",
+                "org.scalanlp" % "breeze_2.10" % "0.5"
               ) ++ Shared.testDeps(v)),
               testOptions in Test += Tests.Argument("console", "junitxml")
             ))
@@ -130,8 +131,8 @@ object Shared {
         </developer>
       </developers>
     ),
-    scalaVersion := "2.9.2",
-    crossScalaVersions := Seq("2.9.2", "2.9.3", "2.10.0", "2.10.2"),
+    scalaVersion := "2.10.3",
+    crossScalaVersions := Seq("2.9.2", "2.9.3", "2.10.0", "2.10.2", "2.10.3"),
     scalacOptions := Seq("-deprecation", "-unchecked"), // , "-Xexperimental"),
     shellPrompt := { (state: State) => "[%s]$ " format(Project.extract(state).currentProject.id) },
     resolvers ++= Seq(
