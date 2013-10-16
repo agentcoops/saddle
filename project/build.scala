@@ -26,9 +26,9 @@ object SaddleBuild extends sbt.Build {
     project(id = "saddle",
             settings = Seq(
               /* 'console' in root acts as if in core. */
-              console <<= (console in core in Compile) { identity },
+              console := (console in core in Compile).value,
               /* so we can package up everything into deployable jar and invoke programs */
-              jarName in assembly <<= version { v => "saddle-%s.jar" format (v) },
+              jarName in assembly := "saddle-%s.jar" format (version.value),
               assembleArtifact in packageScala := false,
               publishArtifact := false,
               mergeStrategy in assembly := {
@@ -68,13 +68,13 @@ object SaddleBuild extends sbt.Build {
                 |import org.saddle._
                 |import org.saddle.time._
                 |import org.saddle.io._""".stripMargin('|'),
-              libraryDependencies <++= scalaVersion (v => Seq(
+              libraryDependencies ++= Seq(
                 "org.scala-saddle" % "jhdf5" % "2.9"
-              ) ++ Shared.testDeps(v)),
+              ) ++ Shared.testDeps(scalaVersion.value),
               testOptions in Test += Tests.Argument("console", "junitxml")
-            )) dependsOn(core)
+    )) dependsOn(core)
 
-  def project(id: String, base: File, settings: Seq[Project.Setting[_]] = Nil) =
+  def project(id: String, base: File, settings: Seq[Def.Setting[_]] = Nil) =
     Project(id = id,
             base = base,
             settings = assemblySettings ++ Project.defaultSettings ++ Shared.settings ++ releaseSettings ++ settings)
@@ -138,9 +138,9 @@ object Shared {
       "Sonatype OSS Releases" at "http://oss.sonatype.org/content/repositories/releases/",
       "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
     ),
-    publishTo <<= (version) { version: String =>
+    publishTo := {
       val nexus = "https://oss.sonatype.org/"
-      if (version.trim.endsWith("SNAPSHOT"))
+      if (version.value.trim.endsWith("SNAPSHOT"))
         Some("snapshots" at nexus + "content/repositories/snapshots")
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
